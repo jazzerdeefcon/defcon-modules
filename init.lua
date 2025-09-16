@@ -14,7 +14,8 @@ gui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 local frame = Instance.new("Frame")
 frame.Size = UDim2.new(0, 400, 0, 520) -- ancho y alto aumentado
 frame.Position = UDim2.new(0.5, -200, 0.5, -260) -- centrado
-frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+frame.BackgroundTransparency = 0.2
 frame.Active = true
 frame.Draggable = true
 frame.Parent = gui
@@ -28,23 +29,24 @@ end
 
 -- #################### LOGO ####################
 local logo = Instance.new("ImageLabel")
-logo.Size = UDim2.new(0, 80, 0, 80)
-logo.Position = UDim2.new(0.5, -40, 0, 10) -- centrado horizontal
+logo.Size = UDim2.new(0, 120, 0, 180)
+logo.Position = UDim2.new(0.45, -40, 0, 10) -- centrado horizontal
 logo.BackgroundTransparency = 1
 logo.Image = "rbxassetid://72346618462507" -- reemplaza con tu assetId
+logo.ScaleType = Enum.ScaleType.Fit -- mantiene proporciones
 logo.Parent = frame
 createUICorner(logo, 10)
 
 -- Título
-local title = Instance.new("TextLabel")
-title.Size = UDim2.new(1, 0, 0, 40)
-title.Position = UDim2.new(0, 0, 0, 0)
-title.Text = "D3fc0n Cheat"
-title.Font = Enum.Font.GothamBold
-title.TextSize = 20
-title.TextColor3 = Color3.fromRGB(3, 182, 252)
-title.BackgroundTransparency = 1
-title.Parent = frame
+-- local title = Instance.new("TextLabel")
+-- title.Size = UDim2.new(1, 0, 0, 40)
+-- title.Position = UDim2.new(0, 0, 0, 0)
+-- title.Text = "D3fc0n Cheat"
+-- title.Font = Enum.Font.GothamBold
+-- title.TextSize = 20
+-- title.TextColor3 = Color3.fromRGB(3, 182, 252)
+-- title.BackgroundTransparency = 1
+-- title.Parent = frame
 
 -- Función para crear switch estilo bullet
 local function createSwitch(yPos, labelText)
