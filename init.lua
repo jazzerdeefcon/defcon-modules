@@ -25,6 +25,15 @@ local function createUICorner(parent, radius)
     corner.Parent = parent
 end
 
+
+-- ############# LOGO ################
+-- Logo en el menú
+local logo = Instance.new("ImageLabel", hackFrame)
+logo.Size = UDim2.new(0, 80, 0, 80)                 -- tamaño del logo
+logo.Position = UDim2.new(0.5, -40, 0, 40)          -- centrado horizontal, 40px desde arriba
+logo.BackgroundTransparency = 1                     -- fondo transparente
+logo.Image = "rbxassetid://72346618462507"            -- 🔥 reemplaza con tu assetId del logo
+
 -- Título
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(1,0,0,40)
