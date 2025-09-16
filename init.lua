@@ -12,7 +12,7 @@ gui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 
 -- Crear Frame principal (más ancho para slider)
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 400, 0, 500) -- ancho aumentado
+frame.Size = UDim2.new(0, 900, 0, 500) -- ancho aumentado
 frame.Position = UDim2.new(0.5, -200, 0.5, -250) -- centrado
 frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 frame.Active = true
