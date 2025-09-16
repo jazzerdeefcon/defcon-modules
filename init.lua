@@ -1,172 +1,191 @@
 -- init.lua
 local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
-local player = Players.LocalPlayer
-local playerGui = player:WaitForChild("PlayerGui")
+local LocalPlayer = Players.LocalPlayer
 
 -- Crear ScreenGui
 local gui = Instance.new("ScreenGui")
 gui.Name = "D3fc0n"
 gui.ResetOnSpawn = false
-gui.Parent = playerGui
+gui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 
 -- Crear Frame principal
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 250, 0, 400)
-frame.Position = UDim2.new(0.5, -125, 0.5, -200)
+frame.Size = UDim2.new(0, 250, 0, 450)
+frame.Position = UDim2.new(0.5, -125, 0.5, -225)
 frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 frame.Active = true
 frame.Draggable = true
 frame.Parent = gui
 
--- Función para crear botones
-local function createButton(text, yPos, callback)
-    local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(0, 220, 0, 30)
-    btn.Position = UDim2.new(0, 15, 0, yPos)
-    btn.Text = text
-    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-    btn.BackgroundColor3 = Color3.fromRGB(3, 182, 252)
-    btn.Parent = frame
-    btn.MouseButton1Click:Connect(callback)
+local function createUICorner(parent, radius)
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, radius or 8)
+    corner.Parent = parent
 end
 
--- Función para crear toggle On/Off
-local function createToggle(labelText, yPos)
+-- Texto título
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, 0, 0, 40)
+title.Position = UDim2.new(0, 0, 0, 0)
+title.Text = "D3fc0n Cheat"
+title.Font = Enum.Font.GothamBold
+title.TextSize = 20
+title.TextColor3 = Color3.fromRGB(3, 182, 252)
+title.BackgroundTransparency = 1
+title.Parent = frame
+
+-- Función para crear un toggle estilo switch
+local function createSwitch(yPos, labelText, mutuallyExclusiveWith)
+    -- Texto descriptivo
     local label = Instance.new("TextLabel")
-    label.Size = UDim2.new(0, 120, 0, 30)
-    label.Position = UDim2.new(0, 15, 0, yPos)
+    label.Size = UDim2.new(0.6, 0, 0, 25)
+    label.Position = UDim2.new(0, 10, 0, yPos)
     label.Text = labelText
     label.TextColor3 = Color3.fromRGB(255, 255, 255)
+    label.Font = Enum.Font.Gotham
+    label.TextSize = 14
     label.BackgroundTransparency = 1
     label.Parent = frame
 
-    local toggle = Instance.new("TextButton")
-    toggle.Size = UDim2.new(0, 60, 0, 30)
-    toggle.Position = UDim2.new(0, 150, 0, yPos)
-    toggle.Text = "OFF"
-    toggle.TextColor3 = Color3.fromRGB(0, 0, 0)
-    toggle.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
-    toggle.Parent = frame
+    -- Contenedor switch
+    local container = Instance.new("TextButton")
+    container.Size = UDim2.new(0, 50, 0, 25)
+    container.Position = UDim2.new(0.7, 0, 0, yPos)
+    container.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+    container.Text = ""
+    container.Parent = frame
+    createUICorner(container, 12)
 
-    local state = false
-    toggle.MouseButton1Click:Connect(function()
-        state = not state
-        if state then
-            toggle.Text = "ON"
-            toggle.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
-        else
-            toggle.Text = "OFF"
-            toggle.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+    -- Bolita del switch
+    local circle = Instance.new("Frame")
+    circle.Size = UDim2.new(0, 23, 0, 23)
+    circle.Position = UDim2.new(0, 1, 0, 1)
+    circle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    circle.Parent = container
+    createUICorner(circle, 12)
+
+    local isOn = false
+
+    local function toggle()
+        isOn = not isOn
+        if mutuallyExclusiveWith and isOn then
+            mutuallyExclusiveWith:Set(false)
         end
-    end)
 
-    return toggle
-end
-
--- Función para crear slider
-local function createSlider(labelText, yPos, minVal, maxVal)
-    local label = Instance.new("TextLabel")
-    label.Size = UDim2.new(0, 220, 0, 20)
-    label.Position = UDim2.new(0, 15, 0, yPos)
-    label.Text = labelText .. ": " .. minVal
-    label.TextColor3 = Color3.fromRGB(255, 255, 255)
-    label.BackgroundTransparency = 1
-    label.Parent = frame
-
-    local sliderFrame = Instance.new("Frame")
-    sliderFrame.Size = UDim2.new(0, 220, 0, 10)
-    sliderFrame.Position = UDim2.new(0, 15, 0, yPos + 25)
-    sliderFrame.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-    sliderFrame.Parent = frame
-
-    local fill = Instance.new("Frame")
-    fill.Size = UDim2.new(0.5, 0, 1, 0)
-    fill.BackgroundColor3 = Color3.fromRGB(3, 182, 252)
-    fill.Parent = sliderFrame
-
-    local value = minVal
-
-    local function updateSlider(input)
-        local x = math.clamp((input.Position.X - sliderFrame.AbsolutePosition.X) / sliderFrame.AbsoluteSize.X, 0, 1)
-        fill.Size = UDim2.new(x, 0, 1, 0)
-        value = math.floor(minVal + x * (maxVal - minVal))
-        label.Text = labelText .. ": " .. value
+        local goal = {}
+        if isOn then
+            goal.Position = UDim2.new(0, 26, 0, 1)
+            container.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+        else
+            goal.Position = UDim2.new(0, 1, 0, 1)
+            container.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+        end
+        TweenService:Create(circle, TweenInfo.new(0.2), goal):Play()
     end
 
-    sliderFrame.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then
-            updateSlider(input)
-            local conn
-            conn = input.Changed:Connect(function()
-                if input.UserInputState == Enum.UserInputState.End then
-                    conn:Disconnect()
-                else
-                    updateSlider(input)
-                end
-            end)
-        end
-    end)
-    sliderFrame.InputChanged:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseMovement then
-            updateSlider(input)
-        end
-    end)
+    container.MouseButton1Click:Connect(toggle)
 
-    return function() return value end
+    local switchAPI = {}
+    function switchAPI:Set(state)
+        if isOn ~= state then
+            toggle()
+        end
+    end
+    return switchAPI
 end
 
--- Botón cerrar (X)
+-- ====== Toggles del Cheat ======
+-- Aimbot encabezado (no interactivo)
+local aimbotLabel = Instance.new("TextLabel")
+aimbotLabel.Size = UDim2.new(1, 0, 0, 25)
+aimbotLabel.Position = UDim2.new(0, 0, 0, 50)
+aimbotLabel.Text = "Aimbot Pro"
+aimbotLabel.Font = Enum.Font.GothamBold
+aimbotLabel.TextSize = 16
+aimbotLabel.TextColor3 = Color3.fromRGB(3, 182, 252)
+aimbotLabel.BackgroundTransparency = 1
+aimbotLabel.Parent = frame
+
+-- Head/Body toggles (mutuamente excluyentes)
+local bodySwitch
+local headSwitch = createSwitch(80, "Head", function() bodySwitch:Set(false) end)
+bodySwitch = createSwitch(120, "Body", function() headSwitch:Set(false) end)
+
+-- Otros toggles ON/OFF
+local espSwitch = createSwitch(160, "ESP")
+local skelSwitch = createSwitch(200, "SKEL")
+local noclipSwitch = createSwitch(240, "Noclip")
+local minimapSwitch = createSwitch(320, "Minimap")
+local teleportSwitch = createSwitch(360, "Teleport")
+local flySwitch = createSwitch(400, "Volar")
+
+-- Slider para Velocidad
+local velocidadLabel = Instance.new("TextLabel")
+velocidadLabel.Size = UDim2.new(0.6, 0, 0, 25)
+velocidadLabel.Position = UDim2.new(0, 10, 0, 280)
+velocidadLabel.Text = "Velocidad: 50"
+velocidadLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+velocidadLabel.Font = Enum.Font.Gotham
+velocidadLabel.TextSize = 14
+velocidadLabel.BackgroundTransparency = 1
+velocidadLabel.Parent = frame
+
+local velocidadSlider = Instance.new("Frame")
+velocidadSlider.Size = UDim2.new(0, 100, 0, 10)
+velocidadSlider.Position = UDim2.new(0.7, 0, 0, 285)
+velocidadSlider.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+velocidadSlider.Parent = frame
+createUICorner(velocidadSlider, 5)
+
+local velocidadFill = Instance.new("Frame")
+velocidadFill.Size = UDim2.new(0.5, 0, 1, 0)
+velocidadFill.Position = UDim2.new(0, 0, 0, 0)
+velocidadFill.BackgroundColor3 = Color3.fromRGB(3, 182, 252)
+velocidadFill.Parent = velocidadSlider
+createUICorner(velocidadFill, 5)
+
+local velocidadValue = 50
+velocidadSlider.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        local connection
+        connection = input.Changed:Connect(function()
+            local mouseX = UserInputService:GetMouseLocation().X
+            local relativeX = math.clamp(mouseX - velocidadSlider.AbsolutePosition.X, 0, velocidadSlider.AbsoluteSize.X)
+            velocidadValue = math.floor(relativeX / velocidadSlider.AbsoluteSize.X * 100)
+            velocidadFill.Size = UDim2.new(relativeX / velocidadSlider.AbsoluteSize.X, 0, 1, 0)
+            velocidadLabel.Text = "Velocidad: "..velocidadValue
+            if input.UserInputState == Enum.UserInputState.End then
+                connection:Disconnect()
+            end
+        end)
+    end
+end)
+
+-- Botón para activar/desactivar velocidad
+local velocidadBtn = Instance.new("TextButton")
+velocidadBtn.Size = UDim2.new(0, 50, 0, 25)
+velocidadBtn.Position = UDim2.new(0.7, 0, 0, 310)
+velocidadBtn.Text = "Activar"
+velocidadBtn.Font = Enum.Font.GothamBold
+velocidadBtn.TextSize = 14
+velocidadBtn.BackgroundColor3 = Color3.fromRGB(3, 182, 252)
+velocidadBtn.TextColor3 = Color3.fromRGB(0,0,0)
+velocidadBtn.Parent = frame
+createUICorner(velocidadBtn, 8)
+
+local velocidadActive = false
+velocidadBtn.MouseButton1Click:Connect(function()
+    velocidadActive = not velocidadActive
+    velocidadBtn.Text = velocidadActive and "Desactivar" or "Activar"
+    velocidadBtn.BackgroundColor3 = velocidadActive and Color3.fromRGB(0,255,0) or Color3.fromRGB(3,182,252)
+end)
+
+-- Botón cerrar X
 local closeBtn = Instance.new("TextButton")
 closeBtn.Size = UDim2.new(0, 30, 0, 30)
 closeBtn.Position = UDim2.new(1, -35, 0, 5)
 closeBtn.Text = "X"
 closeBtn.TextColor3 = Color3.fromRGB(255,255,255)
-closeBtn.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
-closeBtn.Parent = frame
-closeBtn.MouseButton1Click:Connect(function()
-    gui:Destroy()
-end)
-
--- Ocultar/mostrar menú con tecla H
-local menuVisible = true
-UserInputService.InputBegan:Connect(function(input, gameProcessed)
-    if not gameProcessed and input.KeyCode == Enum.KeyCode.H then
-        menuVisible = not menuVisible
-        frame.Visible = menuVisible
-    end
-end)
-
--- Cargar módulos de botones desde GitHub
-local function importModule(url)
-    local ok, mod = pcall(function() return loadstring(game:HttpGet(url))() end)
-    if ok then return mod else warn("Error cargando:", url, mod) return nil end
-end
-
-local modules = {
-    Aimbot = importModule("https://raw.githubusercontent.com/jazzerdeefcon/defcon-modules/main/Aimbot.lua"),
-    ESP = importModule("https://raw.githubusercontent.com/jazzerdeefcon/defcon-modules/main/Boton2.lua"),
-    SKEL = importModule("https://raw.githubusercontent.com/jazzerdeefcon/defcon-modules/main/Boton3.lua"),
-    Noclip = importModule("https://raw.githubusercontent.com/jazzerdeefcon/defcon-modules/main/Noclip.lua"),
-    Velocidad = importModule("https://raw.githubusercontent.com/jazzerdeefcon/defcon-modules/main/Velocidad.lua")
-}
-
--- Crear botones y toggles
-createButton("Aimbot Pro", 40, function() if modules.Aimbot then modules.Aimbot:Run() end end)
-local headToggle = createToggle("Head", 80)
-local bodyToggle = createToggle("Body", 120)
-
-local espToggle = createToggle("ESP", 160)
-local skelToggle = createToggle("SKEL", 200)
-local noclipToggle = createToggle("Noclip", 240)
-
-local velocidadSliderGetter = createSlider("Velocidad", 280, 0, 100)
-createButton("Activar Velocidad", 320, function()
-    local val = velocidadSliderGetter()
-    print("Velocidad activada en:", val)
-    if modules.Velocidad then modules.Velocidad:Run(val) end
-end)
-
-local minimapToggle = createToggle("Minimap", 360)
-local teleportToggle = createToggle("Teleport", 400)
-local flyToggle = createToggle("Volar", 440)
+closeBtn.BackgroundColor3 = Color3.fromRGB(200,0,0
