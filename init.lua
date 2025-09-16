@@ -12,8 +12,8 @@ gui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 
 -- Crear Frame principal (más ancho para slider)
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 400, 0, 500) -- ancho aumentado
-frame.Position = UDim2.new(0.5, -200, 0.5, -250) -- centrado
+frame.Size = UDim2.new(0, 400, 0, 520) -- ancho y alto aumentado
+frame.Position = UDim2.new(0.5, -200, 0.5, -260) -- centrado
 frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 frame.Active = true
 frame.Draggable = true
@@ -29,7 +29,7 @@ end
 -- #################### LOGO ####################
 local logo = Instance.new("ImageLabel")
 logo.Size = UDim2.new(0, 80, 0, 80)
-logo.Position = UDim2.new(0, 20, 0, 10)
+logo.Position = UDim2.new(0.5, -40, 0, 10) -- centrado horizontal
 logo.BackgroundTransparency = 1
 logo.Image = "rbxassetid://72346618462507" -- reemplaza con tu assetId
 logo.Parent = frame
@@ -60,7 +60,7 @@ local function createSwitch(yPos, labelText)
 
     local container = Instance.new("TextButton")
     container.Size = UDim2.new(0, 50, 0, 25)
-    container.Position = UDim2.new(0.75, 0, 0, yPos) -- ajustado al frame más ancho
+    container.Position = UDim2.new(0.75, 0, 0, yPos)
     container.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
     container.Text = ""
     container.Parent = frame
@@ -115,7 +115,7 @@ end
 -- Aimbot encabezado
 local aimbotLabel = Instance.new("TextLabel")
 aimbotLabel.Size = UDim2.new(1, 0, 0, 25)
-aimbotLabel.Position = UDim2.new(0, 0, 0, 100)
+aimbotLabel.Position = UDim2.new(0, 0, 0, 110)
 aimbotLabel.Text = "Aimbot Pro"
 aimbotLabel.Font = Enum.Font.GothamBold
 aimbotLabel.TextSize = 16
@@ -124,8 +124,8 @@ aimbotLabel.BackgroundTransparency = 1
 aimbotLabel.Parent = frame
 
 -- Head/Body switches mutuamente excluyentes
-local headSwitch = createSwitch(130, "Head")
-local bodySwitch = createSwitch(170, "Body")
+local headSwitch = createSwitch(140, "Head")
+local bodySwitch = createSwitch(180, "Body")
 
 headSwitch.ToggleCallback(function(state)
     if state then bodySwitch:Set(false) end
@@ -135,17 +135,17 @@ bodySwitch.ToggleCallback(function(state)
 end)
 
 -- Otros toggles
-local espSwitch = createSwitch(210, "ESP")
-local skelSwitch = createSwitch(250, "SKEL")
-local noclipSwitch = createSwitch(290, "Noclip")
-local minimapSwitch = createSwitch(330, "Minimap")
-local teleportSwitch = createSwitch(370, "Teleport")
-local flySwitch = createSwitch(410, "Volar")
+local espSwitch = createSwitch(220, "ESP")
+local skelSwitch = createSwitch(260, "SKEL")
+local noclipSwitch = createSwitch(300, "Noclip")
+local minimapSwitch = createSwitch(340, "Minimap")
+local teleportSwitch = createSwitch(380, "Teleport")
+local flySwitch = createSwitch(420, "Volar")
 
 -- Slider Velocidad
 local velocidadLabel = Instance.new("TextLabel")
 velocidadLabel.Size = UDim2.new(0.6, 0, 0, 25)
-velocidadLabel.Position = UDim2.new(0, 10, 0, 450)
+velocidadLabel.Position = UDim2.new(0, 10, 0, 460)
 velocidadLabel.Text = "Velocidad: 50"
 velocidadLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 velocidadLabel.Font = Enum.Font.Gotham
@@ -154,8 +154,8 @@ velocidadLabel.BackgroundTransparency = 1
 velocidadLabel.Parent = frame
 
 local velocidadSlider = Instance.new("Frame")
-velocidadSlider.Size = UDim2.new(0, 200, 0, 10)
-velocidadSlider.Position = UDim2.new(0.7, 0, 0, 455)
+velocidadSlider.Size = UDim2.new(0, 250, 0, 10) -- ancho mayor para caber en frame
+velocidadSlider.Position = UDim2.new(0.7, 0, 0, 465)
 velocidadSlider.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 velocidadSlider.Parent = frame
 createUICorner(velocidadSlider, 5)
@@ -192,7 +192,7 @@ end)
 -- Botón activar/desactivar velocidad
 local velocidadBtn = Instance.new("TextButton")
 velocidadBtn.Size = UDim2.new(0, 70, 0, 25)
-velocidadBtn.Position = UDim2.new(0.7, 0, 0, 470)
+velocidadBtn.Position = UDim2.new(0.7, 0, 0, 485)
 velocidadBtn.Text = "Activar"
 velocidadBtn.Font = Enum.Font.GothamBold
 velocidadBtn.TextSize = 14
