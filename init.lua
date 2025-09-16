@@ -10,10 +10,10 @@ gui.Name = "D3fc0n"
 gui.ResetOnSpawn = false
 gui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 
--- Crear Frame principal (más ancho y alto)
+-- Crear Frame principal (más ancho para slider)
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 300, 0, 500) -- Ajustado para que quepan todos los elementos
-frame.Position = UDim2.new(0.5, -150, 0.5, -250)
+frame.Size = UDim2.new(0, 400, 0, 500) -- ancho aumentado
+frame.Position = UDim2.new(0.5, -200, 0.5, -250) -- centrado
 frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 frame.Active = true
 frame.Draggable = true
@@ -50,7 +50,7 @@ local function createSwitch(yPos, labelText)
 
     local container = Instance.new("TextButton")
     container.Size = UDim2.new(0,50,0,25)
-    container.Position = UDim2.new(0.7,0,0,yPos)
+    container.Position = UDim2.new(0.75,0,0,yPos) -- ajustado para frame más ancho
     container.BackgroundColor3 = Color3.fromRGB(100,100,100)
     container.Text = ""
     container.Parent = frame
@@ -68,7 +68,7 @@ local function createSwitch(yPos, labelText)
 
     local function toggle(state)
         if state ~= nil then
-            isOn = not state -- Para asegurar el toggle correcto
+            isOn = not state
         else
             isOn = not isOn
         end
@@ -117,16 +117,12 @@ aimbotLabel.Parent = frame
 local headSwitch = createSwitch(80,"Head")
 local bodySwitch = createSwitch(120,"Body")
 
--- Corrección: cuando se activa uno, primero apaga el otro y luego enciende el actual
+-- Mutuamente excluyentes
 headSwitch.ToggleCallback(function(state)
-    if state then
-        bodySwitch:Set(false)
-    end
+    if state then bodySwitch:Set(false) end
 end)
 bodySwitch.ToggleCallback(function(state)
-    if state then
-        headSwitch:Set(false)
-    end
+    if state then headSwitch:Set(false) end
 end)
 
 -- Otros toggles
@@ -149,7 +145,7 @@ velocidadLabel.BackgroundTransparency = 1
 velocidadLabel.Parent = frame
 
 local velocidadSlider = Instance.new("Frame")
-velocidadSlider.Size = UDim2.new(0,150,0,10) -- más ancho para caber en frame
+velocidadSlider.Size = UDim2.new(0,200,0,10) -- más ancho para que quepa en frame
 velocidadSlider.Position = UDim2.new(0.7,0,0,405)
 velocidadSlider.BackgroundColor3 = Color3.fromRGB(60,60,60)
 velocidadSlider.Parent = frame
@@ -185,7 +181,7 @@ UserInputService.InputEnded:Connect(function(input)
 end)
 
 local velocidadBtn = Instance.new("TextButton")
-velocidadBtn.Size = UDim2.new(0,60,0,25) -- un poco más grande
+velocidadBtn.Size = UDim2.new(0,70,0,25)
 velocidadBtn.Position = UDim2.new(0.7,0,0,420)
 velocidadBtn.Text = "Activar"
 velocidadBtn.Font = Enum.Font.GothamBold
