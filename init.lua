@@ -5,10 +5,20 @@ gui.ResetOnSpawn = false
 
 -- Crear Frame principal
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 200, 0, 150)
-frame.Position = UDim2.new(0.5, -100, 0.5, -75)
+frame.Size = UDim2.new(0, 200, 0, 180)
+frame.Position = UDim2.new(0.5, -100, 0.5, -90)
 frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 frame.Parent = gui
+
+-- Label para mostrar mensajes
+local msgLabel = Instance.new("TextLabel")
+msgLabel.Size = UDim2.new(1, -20, 0, 30)
+msgLabel.Position = UDim2.new(0, 10, 0, 140)
+msgLabel.BackgroundTransparency = 1
+msgLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+msgLabel.TextScaled = true
+msgLabel.Text = ""
+msgLabel.Parent = frame
 
 -- Función para crear botones
 local function createButton(text, yPos, callback)
@@ -16,7 +26,7 @@ local function createButton(text, yPos, callback)
     btn.Size = UDim2.new(0, 180, 0, 30)
     btn.Position = UDim2.new(0, 10, 0, yPos)
     btn.Text = text
-    btn.TextColor3 = Color3.fromRGB(255,255,255)
+    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
     btn.BackgroundColor3 = Color3.fromRGB(3, 182, 252)
     btn.Parent = frame
     btn.MouseButton1Click:Connect(callback)
@@ -41,15 +51,32 @@ local Button1 = import("https://raw.githubusercontent.com/jazzerdeefcon/defcon-m
 local Button2 = import("https://raw.githubusercontent.com/jazzerdeefcon/defcon-modules/main/Boton2.lua")
 local Button3 = import("https://raw.githubusercontent.com/jazzerdeefcon/defcon-modules/main/Boton3.lua")
 
--- Crear botones principales con chequeo de módulo
+-- Crear botones principales y mostrar mensaje en pantalla
 createButton("Botón 1", 10, function()
-    if Button1 then Button1:Run() else warn("Button1 no cargó") end
+    if Button1 then
+        Button1:Run()
+        msgLabel.Text = "Este es el archivo que lanza el Botón 1"
+    else
+        msgLabel.Text = "Button1 no cargó"
+    end
 end)
+
 createButton("Botón 2", 50, function()
-    if Button2 then Button2:Run() else warn("Button2 no cargó") end
+    if Button2 then
+        Button2:Run()
+        msgLabel.Text = "Este es el archivo que lanza el Botón 2"
+    else
+        msgLabel.Text = "Button2 no cargó"
+    end
 end)
+
 createButton("Botón 3", 90, function()
-    if Button3 then Button3:Run() else warn("Button3 no cargó") end
+    if Button3 then
+        Button3:Run()
+        msgLabel.Text = "Este es el archivo que lanza el Botón 3"
+    else
+        msgLabel.Text = "Button3 no cargó"
+    end
 end)
 
 -- Botón cerrar
@@ -57,7 +84,7 @@ local closeBtn = Instance.new("TextButton")
 closeBtn.Size = UDim2.new(0, 30, 0, 30)
 closeBtn.Position = UDim2.new(1, -35, 0, 5) -- esquina superior derecha
 closeBtn.Text = "X"
-closeBtn.TextColor3 = Color3.fromRGB(255,255,255)
+closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 closeBtn.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
 closeBtn.Parent = frame
 
