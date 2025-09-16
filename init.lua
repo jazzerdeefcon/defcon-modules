@@ -22,12 +22,18 @@ local function createButton(text, yPos, callback)
     btn.MouseButton1Click:Connect(callback)
 end
 
--- Función para cargar módulos desde GitHub
+-- Función para cargar módulos desde GitHub con debug
 local function import(url)
     local ok, res = pcall(function()
         return loadstring(game:HttpGet(url))()
     end)
-    if ok then return res else print("Error cargando:", url, res) end
+    if ok then
+        print("Módulo cargado correctamente:", url)
+        return res
+    else
+        warn("Error cargando módulo:", url, res)
+        return nil
+    end
 end
 
 -- Cargar módulos
@@ -35,7 +41,26 @@ local Button1 = import("https://raw.githubusercontent.com/jazzerdeefcon/defcon-m
 local Button2 = import("https://raw.githubusercontent.com/jazzerdeefcon/defcon-modules/main/Boton2.lua")
 local Button3 = import("https://raw.githubusercontent.com/jazzerdeefcon/defcon-modules/main/Boton3.lua")
 
--- Crear botones
-createButton("Botón 1", 10, function() Button1:Run() end)
-createButton("Botón 2", 50, function() Button2:Run() end)
-createButton("Botón 3", 90, function() Button3:Run() end)
+-- Crear botones principales con chequeo de módulo
+createButton("Botón 1", 10, function()
+    if Button1 then Button1:Run() else warn("Button1 no cargó") end
+end)
+createButton("Botón 2", 50, function()
+    if Button2 then Button2:Run() else warn("Button2 no cargó") end
+end)
+createButton("Botón 3", 90, function()
+    if Button3 then Button3:Run() else warn("Button3 no cargó") end
+end)
+
+-- Botón cerrar
+local closeBtn = Instance.new("TextButton")
+closeBtn.Size = UDim2.new(0, 30, 0, 30)
+closeBtn.Position = UDim2.new(1, -35, 0, 5) -- esquina superior derecha
+closeBtn.Text = "X"
+closeBtn.TextColor3 = Color3.fromRGB(255,255,255)
+closeBtn.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+closeBtn.Parent = frame
+
+closeBtn.MouseButton1Click:Connect(function()
+    gui:Destroy() -- cierra todo el menú
+end)
