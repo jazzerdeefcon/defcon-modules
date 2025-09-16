@@ -13,7 +13,7 @@ frame.Parent = gui
 -- Label para mostrar mensajes
 local msgLabel = Instance.new("TextLabel")
 msgLabel.Size = UDim2.new(1, -20, 0, 30)
-msgLabel.Position = UDim2.new(0, 10, 0, 140)
+msgLabel.Position = UDim2.new(0, 10, 0, 140) -- debajo de los botones
 msgLabel.BackgroundTransparency = 1
 msgLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 msgLabel.TextScaled = true
@@ -32,52 +32,26 @@ local function createButton(text, yPos, callback)
     btn.MouseButton1Click:Connect(callback)
 end
 
--- Función para cargar módulos desde GitHub con debug
-local function import(url)
-    local ok, res = pcall(function()
-        return loadstring(game:HttpGet(url))()
-    end)
-    if ok then
-        print("Módulo cargado correctamente:", url)
-        return res
-    else
-        warn("Error cargando módulo:", url, res)
-        return nil
-    end
+-- Módulos embebidos directamente
+local Button1 = {}
+function Button1:Run()
+    msgLabel.Text = "Este es el archivo que lanza el Botón 1"
 end
 
--- Cargar módulos
-local Button1 = import("https://raw.githubusercontent.com/jazzerdeefcon/defcon-modules/main/Boton1.lua")
-local Button2 = import("https://raw.githubusercontent.com/jazzerdeefcon/defcon-modules/main/Boton2.lua")
-local Button3 = import("https://raw.githubusercontent.com/jazzerdeefcon/defcon-modules/main/Boton3.lua")
+local Button2 = {}
+function Button2:Run()
+    msgLabel.Text = "Este es el archivo que lanza el Botón 2"
+end
 
--- Crear botones principales y mostrar mensaje en pantalla
-createButton("Botón 1", 10, function()
-    if Button1 then
-        Button1:Run()
-        msgLabel.Text = "Este es el archivo que lanza el Botón 1"
-    else
-        msgLabel.Text = "Button1 no cargó"
-    end
-end)
+local Button3 = {}
+function Button3:Run()
+    msgLabel.Text = "Este es el archivo que lanza el Botón 3"
+end
 
-createButton("Botón 2", 50, function()
-    if Button2 then
-        Button2:Run()
-        msgLabel.Text = "Este es el archivo que lanza el Botón 2"
-    else
-        msgLabel.Text = "Button2 no cargó"
-    end
-end)
-
-createButton("Botón 3", 90, function()
-    if Button3 then
-        Button3:Run()
-        msgLabel.Text = "Este es el archivo que lanza el Botón 3"
-    else
-        msgLabel.Text = "Button3 no cargó"
-    end
-end)
+-- Crear botones principales
+createButton("Botón 1", 10, function() Button1:Run() end)
+createButton("Botón 2", 50, function() Button2:Run() end)
+createButton("Botón 3", 90, function() Button3:Run() end)
 
 -- Botón cerrar
 local closeBtn = Instance.new("TextButton")
