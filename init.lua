@@ -10,10 +10,10 @@ gui.Name = "D3fc0n"
 gui.ResetOnSpawn = false
 gui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 
--- Crear Frame principal
+-- Crear Frame principal (más ancho y alto)
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 250, 0, 450)
-frame.Position = UDim2.new(0.5, -125, 0.5, -225)
+frame.Size = UDim2.new(0, 300, 0, 500) -- Ajustado para que quepan todos los elementos
+frame.Position = UDim2.new(0.5, -150, 0.5, -250)
 frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 frame.Active = true
 frame.Draggable = true
@@ -66,9 +66,12 @@ local function createSwitch(yPos, labelText)
     local isOn = false
     local toggleCallback = nil
 
-    local function toggle()
-        isOn = not isOn
-        if toggleCallback then toggleCallback(isOn) end
+    local function toggle(state)
+        if state ~= nil then
+            isOn = not state -- Para asegurar el toggle correcto
+        else
+            isOn = not isOn
+        end
 
         local goal = {}
         if isOn then
@@ -79,13 +82,17 @@ local function createSwitch(yPos, labelText)
             container.BackgroundColor3 = Color3.fromRGB(100,100,100)
         end
         TweenService:Create(circle,TweenInfo.new(0.2),goal):Play()
+
+        if toggleCallback then toggleCallback(isOn) end
     end
 
-    container.MouseButton1Click:Connect(toggle)
+    container.MouseButton1Click:Connect(function()
+        toggle()
+    end)
 
     local switchAPI = {
         Set = function(state)
-            if isOn ~= state then toggle() end
+            if isOn ~= state then toggle(state) end
         end,
         Get = function() return isOn end,
         ToggleCallback = function(callback) toggleCallback = callback end
@@ -110,25 +117,30 @@ aimbotLabel.Parent = frame
 local headSwitch = createSwitch(80,"Head")
 local bodySwitch = createSwitch(120,"Body")
 
+-- Corrección: cuando se activa uno, primero apaga el otro y luego enciende el actual
 headSwitch.ToggleCallback(function(state)
-    if state then bodySwitch:Set(false) end
+    if state then
+        bodySwitch:Set(false)
+    end
 end)
 bodySwitch.ToggleCallback(function(state)
-    if state then headSwitch:Set(false) end
+    if state then
+        headSwitch:Set(false)
+    end
 end)
 
 -- Otros toggles
 local espSwitch = createSwitch(160,"ESP")
 local skelSwitch = createSwitch(200,"SKEL")
 local noclipSwitch = createSwitch(240,"Noclip")
-local minimapSwitch = createSwitch(320,"Minimap")
-local teleportSwitch = createSwitch(360,"Teleport")
-local flySwitch = createSwitch(400,"Volar")
+local minimapSwitch = createSwitch(280,"Minimap")
+local teleportSwitch = createSwitch(320,"Teleport")
+local flySwitch = createSwitch(360,"Volar")
 
 -- Slider Velocidad
 local velocidadLabel = Instance.new("TextLabel")
 velocidadLabel.Size = UDim2.new(0.6,0,0,25)
-velocidadLabel.Position = UDim2.new(0,10,0,280)
+velocidadLabel.Position = UDim2.new(0,10,0,400)
 velocidadLabel.Text = "Velocidad: 50"
 velocidadLabel.TextColor3 = Color3.fromRGB(255,255,255)
 velocidadLabel.Font = Enum.Font.Gotham
@@ -137,8 +149,8 @@ velocidadLabel.BackgroundTransparency = 1
 velocidadLabel.Parent = frame
 
 local velocidadSlider = Instance.new("Frame")
-velocidadSlider.Size = UDim2.new(0,100,0,10)
-velocidadSlider.Position = UDim2.new(0.7,0,0,285)
+velocidadSlider.Size = UDim2.new(0,150,0,10) -- más ancho para caber en frame
+velocidadSlider.Position = UDim2.new(0.7,0,0,405)
 velocidadSlider.BackgroundColor3 = Color3.fromRGB(60,60,60)
 velocidadSlider.Parent = frame
 createUICorner(velocidadSlider,5)
@@ -173,8 +185,8 @@ UserInputService.InputEnded:Connect(function(input)
 end)
 
 local velocidadBtn = Instance.new("TextButton")
-velocidadBtn.Size = UDim2.new(0,50,0,25)
-velocidadBtn.Position = UDim2.new(0.7,0,0,310)
+velocidadBtn.Size = UDim2.new(0,60,0,25) -- un poco más grande
+velocidadBtn.Position = UDim2.new(0.7,0,0,420)
 velocidadBtn.Text = "Activar"
 velocidadBtn.Font = Enum.Font.GothamBold
 velocidadBtn.TextSize = 14
